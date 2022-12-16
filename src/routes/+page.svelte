@@ -1,23 +1,9 @@
 <script lang="ts">
 	import Counter from './Counter.svelte';
-	// import supabaseClient from '$lib/server/supabaseClient';
+	import { todos } from '../store';
+	import fetchTodos from '../fetchTodos';
 
-	// let todos: [] | null;
-	// const fetchTodos = async () => {
-	// 	try {
-	// 		const { data, error } = await supabase
-	// 			.from('todos')
-	// 			.select('*')
-	// 			.order('created_at', { ascending: false });
-	// 		if (error) throw error;
-
-	// 		todos = data;
-	// 	} catch (error) {
-	// 		alert(error);
-	// 		todot = [];
-	// 	}
-	// };
-	// console.log(process.env);
+	fetchTodos();
 </script>
 
 <svelte:head>
@@ -35,13 +21,17 @@
 	</form>
 
 	<ul class="list">
-		<li class="listItem">
-			<label class="label">
-				<input type="checkbox" name="" class="checkbox" />
-				<span class="title">todo title</span>
-			</label>
-			<button name="" class="button"> 削除 </button>
-		</li>
+		{#if $todos !== null}
+			{#each $todos as todo (todo.id)}
+				<li class="listItem">
+					<label class="label">
+						<input type="checkbox" name="" class="checkbox" checked={todo.completed} />
+						<span class="title">{todo.title}</span>
+					</label>
+					<button name="" class="button"> 削除 </button>
+				</li>
+			{/each}
+		{/if}
 	</ul>
 </section>
 
