@@ -5,15 +5,28 @@
 
 	let title = '';
 
-	// type MouseEvnetHandler = (tete: HTMLInputElement, event: MouseEvent) => void;
-
-	const handleSubmit = async () => {
+	const addTodo = async () => {
 		if (title.trim().length !== 0) {
-			await supabase.from('todos').insert({ title, completed: false });
-			fetchTodos();
-			title = '';
+			try {
+				const { error } = await supabase.from('todos').insert({ title, completed: false });
+				if (error) throw error;
+				fetchTodos();
+				title = '';
+			} catch (error) {
+				alert(error);
+			}
 		} else {
 			alert('Todoを入力してください。');
+		}
+	};
+
+	const deleteTodo = async (e: Event & { currentTarget: EventTarget & HTMLButtonElement }) => {
+		try {
+			const { error } = await supabase.from('todos').delete().match({ id: e.currentTarget.name });
+			if (error) throw error;
+			fetchTodos();
+		} catch (error) {
+			alert(error);
 		}
 	};
 
@@ -22,7 +35,7 @@
 			const { error } = await supabase
 				.from('todos')
 				.update({ completed: e.currentTarget.checked })
-				.eq('id', e.currentTarget.id);
+				.eq('id', e.currentTarget.name);
 			if (error) throw error;
 		} catch (error) {
 			alert(error);
@@ -41,7 +54,7 @@
 <section class="container">
 	<h2 class="title">Todo一覧</h2>
 
-	<form on:submit|preventDefault={handleSubmit}>
+	<form on:submit|preventDefault={addTodo}>
 		<input
 			type="text"
 			name="todoname"
@@ -68,15 +81,14 @@
 					<label class="label">
 						<input
 							type="checkbox"
-							name=""
 							class="checkbox"
 							checked={todo.completed}
-							id={todo.id}
+							name={todo.id}
 							on:click={toggleCompleted}
 						/>
 						<span class="title">{todo.title}</span>
 					</label>
-					<button name="" class="button"> 削除 </button>
+					<button name={todo.id} class="button" on:click|preventDefault={deleteTodo}> 削除 </button>
 				</li>
 			{/each}
 		</ul>
