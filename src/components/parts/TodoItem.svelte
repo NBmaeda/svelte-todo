@@ -2,9 +2,10 @@
 	import type { Todo } from '$lib/types';
 	import { deleteTodo, toggleCompleted } from '$lib/utils/supabase';
 	export let todo: Todo;
+	import { slide } from 'svelte/transition';
 </script>
 
-<li class="listItem">
+<li class="listItem" transition:slide>
 	<label class="label">
 		<input
 			type="checkbox"
