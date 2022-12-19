@@ -2,6 +2,7 @@
 	import { todos } from '../store';
 	import fetchTodos from '../fetchTodos';
 	import supabase from '$lib/supabase';
+	import { onMount } from 'svelte';
 
 	let title = '';
 
@@ -30,6 +31,16 @@
 		}
 	};
 
+	const deleteCompletedTodo = async (e: Event) => {
+		try {
+			const { error } = await supabase.from('todos').delete().match({ completed: true });
+			if (error) throw error;
+			fetchTodos();
+		} catch (error) {
+			alert(error);
+		}
+	};
+
 	const toggleCompleted = async (e: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
 		try {
 			const { error } = await supabase
@@ -37,13 +48,15 @@
 				.update({ completed: e.currentTarget.checked })
 				.eq('id', e.currentTarget.name);
 			if (error) throw error;
+			fetchTodos();
 		} catch (error) {
 			alert(error);
 		}
-		fetchTodos();
 	};
 
-	fetchTodos();
+	onMount(() => {
+		fetchTodos();
+	});
 </script>
 
 <svelte:head>
@@ -63,7 +76,9 @@
 			class="input"
 		/>
 		<button type="submit" class="button" disabled={!title}> Todoを追加 </button>
-		<button type="button" class="button"> 完了済みのTodoを削除 </button>
+		<button type="button" class="button" on:click|preventDefault={deleteCompletedTodo}>
+			完了済みのTodoを削除
+		</button>
 	</form>
 
 	{#if $todos === null}
