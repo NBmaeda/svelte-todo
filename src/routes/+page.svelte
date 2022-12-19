@@ -5,6 +5,8 @@
 
 	let title = '';
 
+	// type MouseEvnetHandler = (tete: HTMLInputElement, event: MouseEvent) => void;
+
 	const handleSubmit = async () => {
 		if (title.trim().length !== 0) {
 			await supabase.from('todos').insert({ title, completed: false });
@@ -13,6 +15,19 @@
 		} else {
 			alert('Todoを入力してください。');
 		}
+	};
+
+	const toggleCompleted = async (e: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
+		try {
+			const { error } = await supabase
+				.from('todos')
+				.update({ completed: e.currentTarget.checked })
+				.eq('id', e.currentTarget.id);
+			if (error) throw error;
+		} catch (error) {
+			alert(error);
+		}
+		fetchTodos();
 	};
 
 	fetchTodos();
@@ -51,7 +66,14 @@
 			{#each $todos as todo (todo.id)}
 				<li class="listItem">
 					<label class="label">
-						<input type="checkbox" name="" class="checkbox" checked={todo.completed} />
+						<input
+							type="checkbox"
+							name=""
+							class="checkbox"
+							checked={todo.completed}
+							id={todo.id}
+							on:click={toggleCompleted}
+						/>
 						<span class="title">{todo.title}</span>
 					</label>
 					<button name="" class="button"> 削除 </button>
