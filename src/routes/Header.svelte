@@ -22,6 +22,7 @@
 		align-items: center;
 		margin: 0;
 		font-size: 1.5em;
+		font-weight: 600;
 	}
 	.logo {
 		display: inline-block;
