@@ -1,7 +1,19 @@
 <script lang="ts">
-	import Counter from './Counter.svelte';
 	import { todos } from '../store';
 	import fetchTodos from '../fetchTodos';
+	import supabase from '$lib/supabase';
+
+	let title = '';
+
+	const handleSubmit = async () => {
+		if (title.trim().length !== 0) {
+			await supabase.from('todos').insert({ title, completed: false });
+			fetchTodos();
+			title = '';
+		} else {
+			alert('Todoを入力してください。');
+		}
+	};
 
 	fetchTodos();
 </script>
@@ -14,14 +26,28 @@
 <section class="container">
 	<h2 class="title">Todo一覧</h2>
 
-	<form>
-		<input type="text" name="todoname" placeholder="Todoを登録する" value="title" class="input" />
-		<button type="submit" class="button"> Todoを追加 </button>
+	<form on:submit|preventDefault={handleSubmit}>
+		<input
+			type="text"
+			name="todoname"
+			placeholder="Todoを登録する"
+			bind:value={title}
+			class="input"
+		/>
+		<button type="submit" class="button" disabled={!title}> Todoを追加 </button>
 		<button type="button" class="button"> 完了済みのTodoを削除 </button>
 	</form>
 
-	<ul class="list">
-		{#if $todos !== null}
+	{#if $todos === null}
+		<div>
+			<p>loading...</p>
+		</div>
+	{:else if !$todos.length}
+		<div>
+			<p>まだTodoが登録されていません。</p>
+		</div>
+	{:else}
+		<ul class="list">
 			{#each $todos as todo (todo.id)}
 				<li class="listItem">
 					<label class="label">
@@ -31,8 +57,8 @@
 					<button name="" class="button"> 削除 </button>
 				</li>
 			{/each}
-		{/if}
-	</ul>
+		</ul>
+	{/if}
 </section>
 
 <style>

@@ -1,11 +1,10 @@
-import supabaseClient from '$lib/supabaseClient';
-import type { Todo } from '$lib/types';
+import supabase from '$lib/supabase';
 import { todos } from './store';
 
 const fetchTodos = () => {
 	const fetch = async () => {
 		try {
-			const { data, error } = await supabaseClient
+			const { data, error } = await supabase
 				.from('todos')
 				.select('*')
 				.order('created_at', { ascending: false });
