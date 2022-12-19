@@ -1,5 +1,5 @@
 import supabase from '$lib/supabase';
-import { todos } from './store';
+import { todos } from '../../store';
 
 const fetchTodos = () => {
 	const fetch = async () => {

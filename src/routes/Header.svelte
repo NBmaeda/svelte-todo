@@ -27,4 +27,7 @@
 		display: inline-block;
 		margin-right: 5px;
 	}
+	.logo img {
+		vertical-align: top;
+	}
 </style>
