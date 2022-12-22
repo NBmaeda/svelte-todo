@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import TodoList from '../components/parts/TodoList.svelte';
 	import Todoform from '../components/parts/Todoform.svelte';
-	import fetchTodos from '$lib/utils/fetchTodos';
+	import { fetchTodos } from '$lib/utils/useTodos';
 
 	onMount(() => {
 		fetchTodos();

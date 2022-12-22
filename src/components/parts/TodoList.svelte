@@ -3,7 +3,7 @@
 	import TodoItem from './TodoItem.svelte';
 </script>
 
-{#if $todos === null}
+{#if $todos === undefined}
 	<div>
 		<p>loading...</p>
 	</div>

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Todo } from '$lib/types';
-	import { deleteTodo, toggleCompleted } from '$lib/utils/supabase';
-	export let todo: Todo;
+	import { deleteTodo, toggleCompleted } from '$lib/utils/useTodos';
 	import { slide } from 'svelte/transition';
+	export let todo: Todo;
 </script>
 
 <li class="listItem" transition:slide>

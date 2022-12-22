@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { addTodo, deleteCompletedTodo } from '$lib/utils/supabase';
+	import { addTodo, deleteCompletedTodo } from '$lib/utils/useTodos';
 	import { title } from '../../store';
 </script>
 
